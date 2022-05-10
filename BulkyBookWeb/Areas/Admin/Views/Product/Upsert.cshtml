@@ -9,12 +9,12 @@
         <div asp-validation-summary="All"></div>
         <div class="mb-3">
             <label asp-for="Product.Title"></label>
-            <textarea asp-for="Product.Title" rows="3" class="form-control"></textarea>
+            <input asp-for="Product.Title" rows="3" class="form-control"></input>
             <span asp-validation-for="Product.Title" class="text-danger"></span>
         </div>
          <div class="mb-3">
             <label asp-for="Product.Description"></label>
-            <input asp-for="Product.Description" class="form-control"/>
+            <textarea asp-for="Product.Description" class="form-control"></textarea>
             <span asp-validation-for="Product.Description" class="text-danger"></span>
         </div>
         <div class="mb-3 col-6">
@@ -46,10 +46,10 @@
             <label asp-for="Product.Price100"></label>
             <input asp-for="Product.Price100" class="form-control"/>
             <span asp-validation-for="Product.Price100" class="text-danger"></span>
-        </div
+        </div>
         <div class="mb-3">
             <label asp-for="Product.ImageUrl"></label>
-            <input type="file" id="uploadBox" class="form-control"/>
+            <input type="file" id="uploadBox" name="file" class="form-control"/>
         </div>
         <div class="mb-3 col-6">
             <label asp-for="Product.CategoryId"></label>
