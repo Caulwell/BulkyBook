@@ -20,8 +20,7 @@ namespace BulkyBookWeb.Controllers;
         }
         public IActionResult Index()
         {
-            IEnumerable<Product> objProductList = _unitOfWork.Product.GetAll();
-            return View(objProductList);
+            return View();
         }
 
         //GET
@@ -46,45 +45,46 @@ namespace BulkyBookWeb.Controllers;
         if (id == null || id == 0)
         {
             return View(productVM);
-        }else
-        {
-            //update product
         }
-
-        return View(productVM);
-        }
-
-        //POST
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Upsert(ProductVM obj, IFormFile file)
+        else
         {
-            if (ModelState.IsValid)
-            {
+            productVM.Product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
+            return View(productVM);
+        }        
+    }
+
+    //POST
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Upsert(ProductVM obj, IFormFile? file)
+    {
+
+        if (ModelState.IsValid)
+        {
             string wwwRootPath = _hostEnvironment.WebRootPath;
-            if(file != null)
+            if (file != null)
             {
                 string fileName = Guid.NewGuid().ToString();
                 var uploads = Path.Combine(wwwRootPath, @"images\products");
                 var extension = Path.GetExtension(file.FileName);
 
-                using (var fileStreams = new FileStream(Path.Combine(uploads, fileName+extension), FileMode.Create))
+                using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
                 {
                     file.CopyTo(fileStreams);
                 }
                 obj.Product.ImageUrl = @"\images\products\" + fileName + extension;
-            }
-                _unitOfWork.Product.Add(obj.Product);
-                _unitOfWork.Save();
-                TempData["success"] = "Product created successfully";
-                return RedirectToAction("Index");
-            }
-            return View(obj);
 
+            }
+            _unitOfWork.Product.Add(obj.Product);
+            _unitOfWork.Save();
+            TempData["success"] = "Product created successfully";
+            return RedirectToAction("Index");
         }
+        return View(obj);
+    }
 
-        //GET
-        public IActionResult Delete(int? id)
+    //GET
+    public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
             {
@@ -115,5 +115,14 @@ namespace BulkyBookWeb.Controllers;
             return RedirectToAction("Index");
 
         }
+    #region API CALLS
+    [HttpGet]
+    public IActionResult GetAll()
+    {
+        var productList = _unitOfWork.Product.GetAll(includeProperties:"Category,CoverType");
+        return Json(new { data = productList });
     }
+    #endregion
+
+}
 
