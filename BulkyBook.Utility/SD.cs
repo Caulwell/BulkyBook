@@ -21,6 +21,7 @@ namespace BulkyBook.Utility
         public const string StatusRefunded = "Refunded";
 
         public const string PaymentStatusPending = "Pending";
+        public const string PaymentStatusDelayedPayment = "Payment Delayed";
         public const string PaymentStatusApproved = "Approved";
         public const string PaymentStatusRejected = "Rejected";
     }
