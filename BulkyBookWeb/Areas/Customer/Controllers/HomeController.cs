@@ -52,8 +52,10 @@ namespace BulkyBookWeb.Controllers;
 
         if (cartFromDb == null) {
             _unitOfWork.ShoppingCart.Add(shoppingCart);
-            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).ToList().Count);
             _unitOfWork.Save();
+            var count = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).ToList().Count;
+            HttpContext.Session.SetInt32(SD.SessionCart, count);
+            
 
         }  else {
             _unitOfWork.ShoppingCart.IncrementCount(cartFromDb, shoppingCart.Count);
